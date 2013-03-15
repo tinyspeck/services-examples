@@ -61,8 +61,8 @@ use LWP::UserAgent;
 # Customizable vars. Set these to the information for your team
 #
 
-my $opt_domain = "tinyspeck.chatly.io";
-my $opt_token = "gWV6BktGBl16PE0UYTRePW5F";
+my $opt_domain = "foo.chatly.io";
+my $opt_token = "";
 
 
 #
