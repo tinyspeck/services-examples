@@ -61,8 +61,8 @@ use LWP::UserAgent;
 # Customizable vars. Set these to the information for your team
 #
 
-my $opt_domain = "foo.chatly.io";
-my $opt_token = "";
+my $opt_domain = "foo.chatly.io"; # Your team's domain
+my $opt_token = ""; # The token from your Nagios services page
 
 
 #
