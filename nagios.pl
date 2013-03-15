@@ -77,7 +77,7 @@ while ((my $k, my $v) = each %ENV) {
 	$event{$1} = $v;
 }
 
-$event{"slack_version"} = "1.0";
+$event{"plugin_version"} = "1.0";
 
 
 #
@@ -87,7 +87,7 @@ $event{"slack_version"} = "1.0";
 my $ua = LWP::UserAgent->new;
 $ua->timeout(15);
 
-my $req = POST("https://${$opt_domain}/services/hooks/nagios?token=${$opt_token}", \%event);
+my $req = POST("https://${opt_domain}/services/hooks/nagios?token=${opt_token}", \%event);
 
 my $s = $req->as_string;
 print STDERR "Request:\n$s\n";
