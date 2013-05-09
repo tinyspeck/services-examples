@@ -17,7 +17,7 @@
 
 
 #
-# A nagios/icinga plugin for sending alerts to [redacted]. See more documentation on the team services page.
+# A nagios/icinga plugin for sending alerts to Slack. See more documentation on the team services page.
 #
 # Requires these perl modules:
 # HTTP::Request
@@ -28,30 +28,31 @@
 # An example Nagios config:
 #
 # define contact {
-#       contact_name                             redacted
-#       alias                                    Redacted
+#       contact_name                             slack
+#       alias                                    Slack
 #       service_notification_period              24x7
 #       host_notification_period                 24x7
 #       service_notification_options             w,u,c,r
 #       host_notification_options                d,r
-#       service_notification_commands            notify-service-by-redacted
-#       host_notification_commands               notify-host-by-redacted
+#       service_notification_commands            notify-service-by-slack
+#       host_notification_commands               notify-host-by-slack
 # }
 #
 # define command {
-#       command_name     notify-service-by-redacted
-#       command_line     /usr/local/bin/redacted_nagios.pl
+#       command_name     notify-service-by-slack
+#       command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#alerts
 # }
 #
 #define command {
-#       command_name     notify-host-by-redacted
-#       command_line     /usr/local/bin/redacted_nagios.pl
+#       command_name     notify-host-by-slack
+#       command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#ops
 # }
 #
 
 use warnings;
 use strict;
 
+use Getopt::Long;
 use HTTP::Request::Common qw(POST);
 use HTTP::Status qw(is_client_error);
 use LWP::UserAgent;
@@ -61,8 +62,16 @@ use LWP::UserAgent;
 # Customizable vars. Set these to the information for your team
 #
 
-my $opt_domain = "foo.chatly.io"; # Your team's domain
+my $opt_domain = "foo.slack.com"; # Your team's domain
 my $opt_token = ""; # The token from your Nagios services page
+
+
+#
+# Get command-line opts
+#
+
+my %opt_fields;
+GetOptions("field=s%" => \%opt_fields);
 
 
 #
@@ -71,13 +80,16 @@ my $opt_token = ""; # The token from your Nagios services page
 
 my %event;
 
-# Scoop all the Nagios related stuff out of the environment.
+# Get all Nagios variables
 while ((my $k, my $v) = each %ENV) {
 	next unless $k =~ /^ICINGA_(.*)$/;
 	$event{$1} = $v;
 }
 
-$event{"plugin_version"} = "1.0";
+# Merge in passed-in variables
+%event = (%event, %opt_fields);
+
+$event{"slack_version"} = "1.1";
 
 
 #

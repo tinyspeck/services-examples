@@ -17,7 +17,7 @@
 
 
 #
-# An SVN post-commit handler for posting to [redacted]. Setup the channel and get the token
+# An SVN post-commit handler for posting to Slack. Setup the channel and get the token
 # from your team's services page. Change the options below to reflect your team's settings.
 #
 # Requires these perl modules:
@@ -41,7 +41,7 @@ use JSON;
 # Customizable vars. Set these to the information for your team
 #
 
-my $opt_domain = "foo.chatly.io"; # Your team's domain
+my $opt_domain = "foo.slack.com"; # Your team's domain
 my $opt_token = ""; # The token from your SVN services page
 
 
