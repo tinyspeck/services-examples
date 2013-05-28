@@ -59,6 +59,11 @@ my $log = `/usr/bin/svnlook log -r $ARGV[1] $ARGV[0]`;
 my $who = `/usr/bin/svnlook author -r $ARGV[1] $ARGV[0]`;
 chomp $who;
 
+# Escape things before sending to Slack
+$log =~ s/&/&amp;/g;
+$log =~ s/>/&gt;/g;
+$log =~ s/</&lt;/g;
+
 my $payload = {
 	'revision'	=> $ARGV[1],
 	'url'		=> $url,
