@@ -57,6 +57,7 @@ my $opt_token = ""; # The token from your SVN services page
 
 my $log = `/usr/bin/svnlook log -r $ARGV[1] $ARGV[0]`;
 my $who = `/usr/bin/svnlook author -r $ARGV[1] $ARGV[0]`;
+my $url = ""; # optionally set this to the url of your internal commit browser. Ex: http://svnserver/wsvn/main/?op=revision&rev=$ARGV[1]
 chomp $who;
 
 my $payload = {
