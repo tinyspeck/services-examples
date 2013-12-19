@@ -82,7 +82,7 @@ my %event;
 
 # Get all Nagios variables
 while ((my $k, my $v) = each %ENV) {
-	next unless $k =~ /^NAGIOS|ICINGA_(.*)$/;
+	next unless $k =~ /^(?:NAGIOS|ICINGA)_(.*)$/;
 	$event{$1} = $v;
 }
 
