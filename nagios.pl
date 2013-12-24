@@ -17,7 +17,8 @@
 
 
 #
-# A nagios/icinga plugin for sending alerts to Slack. See more documentation on the team services page.
+# A nagios/icinga plugin for sending alerts to Slack. See more documentation on the team services page at:
+# https://my.slack.com/services/new/nagios
 #
 # Requires these perl modules:
 # HTTP::Request
