@@ -24,6 +24,17 @@
 # HTTP::Request
 # LWP::UserAgent
 # JSON
+
+
+# Submits the following post to the slack servers
+
+# POST https: //foo.slack.com/services/hooks/subversion?token=xxxxxx
+# Content-Type: application/x-www-form-urlencoded
+# Host: foo.slack.com
+# Content-Length: 101
+#
+# payload=%7B%22revision%22%3A1%2C%22url%22%3A%22http%3A%2F%2Fsvnserver%22%2C%22author%22%3A%22digiguru%22%2C%22log%22%3A%22Log%20info%22%7D
+
 #
 # I am not a perl programmer. Beware.
 #
