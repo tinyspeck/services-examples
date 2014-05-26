@@ -81,7 +81,7 @@ my $payload = {
 my $ua = LWP::UserAgent->new;
 $ua->timeout(15);
 
-my $req = POST( "https://${opt_domain}/services/hooks/subversion?token=${opt_token}", ['payload' => encode_json($payload)] );
+my $req = POST( "https://${opt_domain}/services/hooks/subversion?token=${opt_token}", ['payload' => JSON->new->latin1->encode($payload)] );
 my $s = $req->as_string;
 print STDERR "Request:\n$s\n";
 
