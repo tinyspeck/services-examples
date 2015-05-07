@@ -1,4 +1,7 @@
 # Requires Powershell 3.0
+#
+# An SVN post-commit handler for posting to Slack. Setup the channel and get the token
+# from your team's services page. Change the options below to reflect your team's settings.
 
 Param(
   [string]$svnPath,
