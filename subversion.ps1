@@ -17,6 +17,7 @@ $endpoint = "https://${domain}/services/hooks/subversion?token=${token}"
 $log = (svnlook log -r $revision $svnPath)
 $who = (svnlook author -r $revision $svnPath)
 $changes = (svnlook changed -r $revision $svnPath)
+$changes = [string]::Join("`r`n", $changes) # $changes was an array of strings
 
 $payload = @{   
     attachments = @(@{
