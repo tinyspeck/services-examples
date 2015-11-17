@@ -68,6 +68,7 @@ my $opt_token = ""; # The token from your Nagios services page
 
 # Define $proxy to use a proxy:
 #my $proxy = "http://proxy:3128/";
+my $proxy = "";
 
 #
 # Get command-line opts
