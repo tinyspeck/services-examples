@@ -87,7 +87,7 @@ my %event;
 # Get all Nagios variables
 while ((my $k, my $v) = each %ENV) {
 	next unless $k =~ /^(?:NAGIOS|ICINGA)_(.*)$/;
-	$event{$1} = $v;
+	($event{$1} = $v) =~ s/\\/\\\\/g;
 }
 
 # Merge in passed-in variables
