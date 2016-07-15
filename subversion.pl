@@ -22,6 +22,7 @@
 #
 # Requires these perl modules:
 # HTTP::Request
+# LWP::Protocol::https
 # LWP::UserAgent
 # JSON
 
@@ -68,15 +69,15 @@ my $opt_token = ""; # The token from your SVN services page
 
 my $log = `/usr/bin/svnlook log -r $ARGV[1] $ARGV[0]`;
 my $who = `/usr/bin/svnlook author -r $ARGV[1] $ARGV[0]`;
+my $what = `/usr/bin/svnlook changed -r $ARGV[1] $ARGV[0]`;
+my $when = `/usr/bin/svnlook date -r $ARGV[1] $ARGV[0]`;
 my $url = ""; # optionally set this to the url of your internal commit browser. Ex: http://svnserver/wsvn/main/?op=revision&rev=$ARGV[1]
 chomp $who;
 
 my $payload = {
-	'revision'	=> $ARGV[1],
-	'url'		=> $url,
-	'author'	=> $who,
-	'log'		=> $log,
+        'text'          => "Checkin by: $who at $when (rev: $ARGV[1])\n\n$log\n\n$what",
 };
+
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(15);
