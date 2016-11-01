@@ -39,6 +39,9 @@ Provide B<slack> related configuration. Possible choices include:
   * slack_domain  - Slack domain for your team
   * slack_token   - Slack token for this integration
 
+B<NOTE:> Providing the Slack token on the CLI might allow it to be
+read from /proc or the like.
+
 =head1 REQUIRES
 
 Perl5.004, L<strict>, L<warnings>, L<HTTP::Request>, L<LWP::UserAgent>
