@@ -15,40 +15,67 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+=head1 NAME
 
-#
-# A nagios/icinga plugin for sending alerts to Slack. See more documentation on the team services page at:
-# https://my.slack.com/services/new/nagios
-#
-# Requires these perl modules:
-# HTTP::Request
-# LWP::UserAgent
-#
-# I am not a perl programmer. Beware.
-#
-# An example Nagios config:
-#
-# define contact {
-#       contact_name                             slack
-#       alias                                    Slack
-#       service_notification_period              24x7
-#       host_notification_period                 24x7
-#       service_notification_options             w,u,c,r
-#       host_notification_options                d,r
-#       service_notification_commands            notify-service-by-slack
-#       host_notification_commands               notify-host-by-slack
-# }
-#
-# define command {
-#       command_name     notify-service-by-slack
-#       command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#alerts
-# }
-#
-#define command {
-#       command_name     notify-host-by-slack
-#       command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#ops
-# }
-#
+nagios.pl - A nagios/icinga plugin for sending alerts to Slack
+
+=head1 AUTHOR
+
+Tiny Speck, Inc
+
+=head1 SYNOPSIS
+
+B<nagios.pl> [B<--help>] [B<-field slack_SOMETHING=value>]
+
+=head2 -h, --help
+
+This output
+
+=head2 -field
+
+Provide B<slack> related configuration. Possible choices include:
+
+  * slack_channel - Target Slack channel for the message
+  * slack_domain  - Slack domain for your team
+  * slack_token   - Slack token for this integration
+
+=head1 REQUIRES
+
+Perl5.004, L<strict>, L<warnings>, L<HTTP::Request>, L<LWP::UserAgent>
+
+=head1 EXPORTS
+
+Nothing
+
+=head1 DESCRIPTION
+
+A nagios/icinga plugin for sending alerts to Slack. See more documentation on the team services page at:
+ L<https://my.slack.com/services/new/nagios>
+
+An example Nagios config:
+
+  define contact {
+        contact_name                             slack
+        alias                                    Slack
+        service_notification_period              24x7
+        host_notification_period                 24x7
+        service_notification_options             w,u,c,r
+        host_notification_options                d,r
+        service_notification_commands            notify-service-by-slack
+        host_notification_commands               notify-host-by-slack
+  }
+
+  define command {
+        command_name     notify-service-by-slack
+        command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#alerts -field slack_domain=yourteam.slack.com -field slack_token=Som3th1ngR@nd0m
+  }
+
+  define command {
+        command_name     notify-host-by-slack
+        command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#ops  -field slack_domain=yourteam.slack.com -field slack_token=Som3th1ngR@nd0m
+  }
+
+=cut
 
 use warnings;
 use strict;
@@ -72,8 +99,17 @@ my $opt_token = ""; # The token from your Nagios services page
 #
 
 my %opt_fields;
-GetOptions("field=s%" => \%opt_fields);
+GetOptions("field=s%" => \%opt_fields)
+  or exec( "pod2usage -v 1 $0 1>&2" );
 
+#
+# Allow these to be provided via command-line opts (fall back to defaults)
+#
+$opt_domain = $opt_fields{'slack_domain'} || $opt_domain;
+delete($opt_fields{'slack_domain'});
+
+$opt_token = $opt_fields{'slack_token'} || $opt_token;
+delete($opt_fields{'slack_token'});
 
 #
 # DO THINGS
