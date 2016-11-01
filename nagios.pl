@@ -44,7 +44,7 @@ read from /proc or the like.
 
 =head1 REQUIRES
 
-Perl5.004, L<strict>, L<warnings>, L<HTTP::Request>, L<LWP::UserAgent>
+Perl5.004, L<strict>, L<warnings>, L<Getopt::Long>, L<HTTP::Request>, L<HTTP::Status>, L<LWP::UserAgent>
 
 =head1 EXPORTS
 
