@@ -2,6 +2,7 @@
 
 
 # Copyright 2013 Tiny Speck, Inc
+# Contributions by Dalton Scavassa @ Universidade Federal da Fronteira Sul
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +25,7 @@
 # HTTP::Request
 # LWP::UserAgent
 # JSON
-
+# Encode
 
 # Submits the following post to the slack servers
 
@@ -35,10 +36,6 @@
 #
 # payload=%7B%22revision%22%3A1%2C%22url%22%3A%22http%3A%2F%2Fsvnserver%22%2C%22author%22%3A%22digiguru%22%2C%22log%22%3A%22Log%20info%22%7D
 
-#
-# I am not a perl programmer. Beware.
-#
-
 use warnings;
 use strict;
 
@@ -46,17 +43,18 @@ use HTTP::Request::Common qw(POST);
 use HTTP::Status qw(is_client_error);
 use LWP::UserAgent;
 use JSON;
-
+use Encode qw(decode_utf8);
 
 #
 # Customizable vars. Set these to the information for your team
 #
 
-my $opt_domain = "foo.slack.com"; # Your team's domain
-my $opt_token = ""; # The token from your SVN services page
+my $opt_domain = "MY_SUBDOMAIN.slack.com"; # Your team's Slack domain
+my $opt_token = "MY_TOKEN"; # The token from your Slack SVN services page
 
+# Optionally set this to the url of your internal commit browser. Ex: http://svnserver/wsvn/main/?op=revision&rev=$ARGV[1]
+my $url = "https://MY_REDMINE/projects/MY_PROJECT/repository/revisions/$ARGV[1]";
 
-#
 # this script gets called by the SVN post-commit handler
 # with these args:
 #
@@ -66,9 +64,11 @@ my $opt_token = ""; # The token from your SVN services page
 # we need to find out what happened in that revision and then act on it
 #
 
-my $log = `/usr/bin/svnlook log -r $ARGV[1] $ARGV[0]`;
+# Character encoding fix - Change LC_ALL value to to your own locale if necessary. Inspired by https://stackoverflow.com/a/33233430
+my $log = qx|export LC_ALL="pt_BR.UTF-8"; /usr/bin/svnlook log -r $ARGV[1] $ARGV[0]|;
+$log = decode_utf8($log);
+
 my $who = `/usr/bin/svnlook author -r $ARGV[1] $ARGV[0]`;
-my $url = ""; # optionally set this to the url of your internal commit browser. Ex: http://svnserver/wsvn/main/?op=revision&rev=$ARGV[1]
 chomp $who;
 
 my $payload = {
