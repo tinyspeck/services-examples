@@ -72,8 +72,14 @@ my $opt_token = ""; # The token from your Nagios services page
 #
 
 my %opt_fields;
-GetOptions("field=s%" => \%opt_fields);
+my $opt_domain_override;
+my $opt_token_override;
+GetOptions("field=s%" => \%opt_fields,
+           "domain=s" => \$opt_domain_override,
+           "token=s" => \$opt_token_override);
 
+if ( $opt_domain_override ) { $opt_domain = $opt_domain_override; }
+if ( $opt_token_override ) { $opt_token = $opt_token_override; }
 
 #
 # DO THINGS
