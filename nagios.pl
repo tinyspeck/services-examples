@@ -34,6 +34,7 @@
 #       service_notification_period              24x7
 #       host_notification_period                 24x7
 #       service_notification_options             w,u,c,r
+#       pager                                    "your_api_token"
 #       host_notification_options                d,r
 #       service_notification_commands            notify-service-by-slack
 #       host_notification_commands               notify-host-by-slack
@@ -41,12 +42,12 @@
 #
 # define command {
 #       command_name     notify-service-by-slack
-#       command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#alerts
+#       command_line     /usr/local/bin/slack_nagios.pl -domain "foo.slack.com" -token "$CONTACTPAGER$" -field slack_channel=#alerts
 # }
 #
 #define command {
 #       command_name     notify-host-by-slack
-#       command_line     /usr/local/bin/slack_nagios.pl -field slack_channel=#ops
+#       command_line     /usr/local/bin/slack_nagios.pl -domain "foo.slack.com" -token "$CONTACTPAGER$" -field slack_channel=#ops
 # }
 #
 
