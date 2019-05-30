@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 
 # Copyright 2013 Tiny Speck, Inc
@@ -66,8 +66,8 @@ my $opt_token = ""; # The token from your SVN services page
 # we need to find out what happened in that revision and then act on it
 #
 
-my $log = `/usr/bin/svnlook log -r $ARGV[1] $ARGV[0]`;
-my $who = `/usr/bin/svnlook author -r $ARGV[1] $ARGV[0]`;
+my $log = `/usr/bin/env svnlook log -r $ARGV[1] $ARGV[0]`;
+my $who = `/usr/bin/env svnlook author -r $ARGV[1] $ARGV[0]`;
 my $url = ""; # optionally set this to the url of your internal commit browser. Ex: http://svnserver/wsvn/main/?op=revision&rev=$ARGV[1]
 chomp $who;
 
