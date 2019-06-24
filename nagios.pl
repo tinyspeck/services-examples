@@ -66,6 +66,9 @@ use LWP::UserAgent;
 my $opt_domain = "foo.slack.com"; # Your team's domain
 my $opt_token = ""; # The token from your Nagios services page
 
+# Define $proxy to use a proxy:
+#my $proxy = "http://proxy:3128/";
+my $proxy = "";
 
 #
 # Get command-line opts
@@ -84,7 +87,7 @@ my %event;
 # Get all Nagios variables
 while ((my $k, my $v) = each %ENV) {
 	next unless $k =~ /^(?:NAGIOS|ICINGA)_(.*)$/;
-	$event{$1} = $v;
+	($event{$1} = $v) =~ s/\\/\\\\/g;
 }
 
 # Merge in passed-in variables
@@ -99,6 +102,10 @@ $event{"slack_version"} = "1.1";
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(15);
+
+if (length $proxy) {
+	$ua->proxy(['https'], $proxy);
+}
 
 my $req = POST("https://${opt_domain}/services/hooks/nagios?token=${opt_token}", \%event);
 
