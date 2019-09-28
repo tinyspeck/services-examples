@@ -72,8 +72,10 @@ my $opt_token = ""; # The token from your Nagios services page
 #
 
 my %opt_fields;
-GetOptions("field=s%" => \%opt_fields);
+my $opt_proxy;
+GetOptions("field=s%" => \%opt_fields, "proxy=s" => \$opt_proxy);
 
+print STDERR $opt_proxy;
 
 #
 # DO THINGS
@@ -99,6 +101,9 @@ $event{"slack_version"} = "1.1";
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(15);
+
+# set proxy
+$ua->proxy (['http', 'https'], $opt_proxy) if (defined($opt_proxy));
 
 my $req = POST("https://${opt_domain}/services/hooks/nagios?token=${opt_token}", \%event);
 
