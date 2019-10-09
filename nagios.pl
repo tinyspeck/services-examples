@@ -57,6 +57,7 @@ use Getopt::Long;
 use HTTP::Request::Common qw(POST);
 use HTTP::Status qw(is_client_error);
 use LWP::UserAgent;
+use List::Util qw(any);
 
 
 #
@@ -72,7 +73,11 @@ my $opt_token = ""; # The token from your Nagios services page
 #
 
 my %opt_fields;
-GetOptions("field=s%" => \%opt_fields);
+my $opt_service_group;
+GetOptions(
+    "field=s%"        => \%opt_fields,
+    "service_group:s" => \$opt_service_group,
+);
 
 
 #
@@ -97,14 +102,23 @@ $event{"slack_version"} = "1.1";
 # Make the request
 #
 
-my $ua = LWP::UserAgent->new;
-$ua->timeout(15);
+if (length $event{SERVICEGROUPNAMES} and length $opt_service_group) {
+    my @service_groups = split /, */, $event{SERVICEGROUPNAMES};
+    slack_notif() if any { $_ eq $opt_service_group } @service_groups;
+} else {
+    slack_notif();
+}
 
-my $req = POST("https://${opt_domain}/services/hooks/nagios?token=${opt_token}", \%event);
+sub slack_notif {
+    my $ua = LWP::UserAgent->new;
+    $ua->timeout(15);
 
-my $s = $req->as_string;
-print STDERR "Request:\n$s\n";
+    my $req = POST("https://${opt_domain}/services/hooks/nagios?token=${opt_token}", \%event);
 
-my $resp = $ua->request($req);
-$s = $resp->as_string;
-print STDERR "Response:\n$s\n";
+    my $s = $req->as_string;
+    print STDERR "Request:\n$s\n";
+
+    my $resp = $ua->request($req);
+    $s = $resp->as_string;
+    print STDERR "Response:\n$s\n";
+}
