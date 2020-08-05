@@ -99,6 +99,7 @@ $event{"slack_version"} = "1.1";
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(15);
+$ua->env_proxy;
 
 my $req = POST("https://${opt_domain}/services/hooks/nagios?token=${opt_token}", \%event);
 
